@@ -1,0 +1,90 @@
+#######################################################################
+#   Global options: https://caddyserver.com/docs/caddyfile/options
+#______________________________________________________________________
+{
+    # debug
+    admin off
+    email postmaster@example.com
+    default_sni example.com
+    # Debug endpoint
+    # acme_ca https://acme-staging-v02.api.letsencrypt.org/directory	
+}
+
+#######################################################################
+#   Snippets
+#______________________________________________________________________
+
+(handle_errors_maintenance) {
+	handle_errors {
+		@maintenance expression {http.error.status_code} == 502
+		rewrite @maintenance maintenance.html
+		root * "C:/ProgramData/Caddy"
+		file_server
+	}
+}
+
+(matrix-well-known-header) {
+    # Headers
+    header Content-Type "application/json"
+    header Access-Control-Allow-Origin "*"
+    header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+}
+
+#######################################################################
+#   MDaemon
+#______________________________________________________________________
+
+mx1.example.com:80 {
+	root * "C:/MDaemon/WorldClient/HTML"
+	file_server /.well-known/acme-challenge/*
+	log {
+		output file "C:/ProgramData/Caddy/Log/mx1-example-com-80-well-known-access.log" {
+			roll_size 100mb
+			roll_keep 5
+			roll_keep_for 720h
+		}
+	}
+}
+
+autodiscover.example.com,
+autodiscover.example1.com,
+autodiscover.example2.com {
+    reverse_proxy 127.0.0.1:3000
+	import handle_errors_maintenance
+	log {
+		output file "C:/ProgramData/Caddy/Log/autodiscover-access.log" {
+			roll_size 100mb
+			roll_keep 5
+			roll_keep_for 168h
+		}
+	}
+}
+
+mail.example.com,
+mail.example1.com,
+mail.example2.com {
+    reverse_proxy 127.0.0.1:3000
+	import handle_errors_maintenance
+	log {
+		output file "C:/ProgramData/Caddy/Log/webmail-access.log" {
+			roll_size 100mb
+			roll_keep 5
+			roll_keep_for 48h
+		}
+	}
+}
+
+web-admin.example.com,
+web-admin.example1.com,
+web-admin.example2.com {
+    reverse_proxy 127.0.0.1:1000
+	import handle_errors_maintenance
+	log {
+		output file "C:/ProgramData/Caddy/Log/web-admin-access.log" {
+			roll_size 100mb
+			roll_keep 5
+			roll_keep_for 720h
+		}
+	}
+}
