@@ -75,6 +75,33 @@ mail.example2.com {
 	}
 }
 
+mta-sts.example.com {
+	handle /.well-known/mta-sts.txt {
+		respond `version: STSv1
+mode: testing
+mx: mx1.example.com
+max_age: 86400` 200
+	}
+}
+
+mta-sts.example1.com {
+	handle /.well-known/mta-sts.txt {
+		respond `version: STSv1
+mode: testing
+mx: mx1.example1.com
+max_age: 86400` 200
+	}
+}
+
+mta-sts.example2.com {
+	handle /.well-known/mta-sts.txt {
+		respond `version: STSv1
+mode: testing
+mx: mx1.example2.com
+max_age: 86400` 200
+	}
+}
+
 web-admin.example.com,
 web-admin.example1.com,
 web-admin.example2.com {

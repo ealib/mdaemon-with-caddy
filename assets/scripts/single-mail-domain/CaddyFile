@@ -71,6 +71,15 @@ mail.example.com {
 	}
 }
 
+mta-sts.example.com {
+	handle /.well-known/mta-sts.txt {
+		respond `version: STSv1
+mode: testing
+mx: mx1.example.com
+max_age: 86400` 200
+	}
+}
+
 web-admin.example.com {
     reverse_proxy 127.0.0.1:1000
 	import handle_errors_maintenance
