@@ -1,4 +1,12 @@
-#######################################################################
+# Sample Caddyfile for using Caddy in front of MDaemon.
+#
+# Customize email address and domain names.
+# Optional settings commented out.
+#
+# BE SURE YOUR DOMAINS ARE POINTED AT YOUR SERVER FIRST.
+# Documentation: https://caddyserver.com/docs/
+#
+########################################################################
 #   Global options: https://caddyserver.com/docs/caddyfile/options
 #______________________________________________________________________
 {
